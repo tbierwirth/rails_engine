@@ -34,4 +34,28 @@ describe 'Merchants API' do
     expect(response).to be_successful
     expect(merchant["data"]["attributes"]["name"]).to eq(name)
   end
+
+  it "can find a merchant with query created_at parameters" do
+    merchant_1 = Merchant.create!(name: "Bob's Burgers", created_at: Date.today.last_week, updated_at: Date.today.last_week)
+    merchant_2 = Merchant.create!(name: "Ted's Tacos", created_at: Date.today)
+
+    get "/api/v1/merchants/find?created_at=#{merchant_1.created_at}"
+
+    merchant = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(merchant["data"]["id"]).to eq(merchant_1.id.to_s)
+  end
+
+  it "can find a merchant with query updated_at parameters" do
+    merchant_1 = Merchant.create!(name: "Bob's Burgers", created_at: Date.today.last_week, updated_at: Date.today.last_week)
+    merchant_2 = Merchant.create!(name: "Ted's Tacos", created_at: Date.today, updated_at: Date.today)
+
+    get "/api/v1/merchants/find?updated_at=#{merchant_2.updated_at}"
+
+    merchant = JSON.parse(response.body)
+    
+    expect(response).to be_successful
+    expect(merchant["data"]["id"]).to eq(merchant_2.id.to_s)
+  end
 end
