@@ -1,4 +1,4 @@
-class Api::V1::MerchantsFindController < ApplicationController
+class Api::V1::Merchants::FindController < ApplicationController
 
   def index
     render json: MerchantSerializer.new(Merchant.where(find_params))
