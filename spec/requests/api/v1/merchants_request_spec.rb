@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'Merchants API' do
+describe 'Merchants API Endpoints' do
   before :each do
     @merchant_1 = Merchant.create!(name: "Bob's Burgers", created_at: Date.today.last_week, updated_at: Date.today.last_week)
     @merchant_2 = Merchant.create!(name: "Ted's Tacos", created_at: Date.today, updated_at: Date.today)
