@@ -4,7 +4,7 @@ class Transaction < ApplicationRecord
 
   belongs_to :invoice
 
-  default_scope { order(id: :asc) }
+  # default_scope { order(id: :asc) }
   scope :successful, -> { where(result: "success") }
 
   def self.trans_by_customer(customer_id)
