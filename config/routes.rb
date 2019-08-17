@@ -5,6 +5,11 @@ Rails.application.routes.draw do
       namespace :merchants do
         get 'find/', to: 'find#show'
         get 'find_all/', to: 'find#index'
+        get 'most_revenue/', to: 'most_revenue#index'
+        get 'most_items/', to: 'most_items#index'
+        get 'revenue/', to: 'revenue#index'
+        get ':id/revenue/', to: 'revenue#show'
+        get ':id/favorite_customer/', to: 'favorite_customer#show'
         get ':id/items', to: 'items#index'
         get ':id/invoices', to: 'invoices#index'
       end
