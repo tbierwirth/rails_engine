@@ -57,6 +57,7 @@ class Merchant < ApplicationRecord
             .group('invoices.customer_id')
             .order('customer_count DESC')
             .first
+    end
 
   def find_items
     Item.where('items.merchant_id = ?', self).order('items.id')
@@ -65,4 +66,5 @@ class Merchant < ApplicationRecord
   def find_invoices
     Invoice.where('invoices.merchant_id = ?', self).order('invoices.id')
   end
+
 end
