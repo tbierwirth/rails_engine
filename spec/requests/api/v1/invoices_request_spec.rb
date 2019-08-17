@@ -1,15 +1,23 @@
 require 'rails_helper'
 
-describe 'InvoiceSerializer API' do
+describe 'Invoices API Endpoints' do
   before :each do
-    @customer = Customer.create!(name: "Bill Gates")
+    @customer = Customer.create!(first_name: "Bill", last_name: "Gates")
     @merchant = Merchant.create!(name: "Bob's Burgers", created_at: Date.today.last_week, updated_at: Date.today.last_week)
-    @invoice_1 = Invoice.create!(customer_id: customer.id, merchant_id: merchant_1.id, status: 'shipped')
-    @invoice_2 = Invoice.create!(customer_id: customer.id, merchant_id: merchant_1.id, status: 'shipped')
-    @invoice_3 = Invoice.create!(customer_id: customer.id, merchant_id: merchant_1.id, status: 'shipped')
+    @item_1 = FactoryBot.create(:item, merchant_id: @merchant.id)
+    @item_2 = FactoryBot.create(:item, merchant_id: @merchant.id)
+    @item_3 = FactoryBot.create(:item, merchant_id: @merchant.id)
+    @invoice_1 = Invoice.create!(customer_id: @customer.id, merchant_id: @merchant.id, status: 'shipped', created_at: Date.today.last_week, updated_at: Date.today.last_week)
+    @invoice_2 = Invoice.create!(customer_id: @customer.id, merchant_id: @merchant.id, status: 'shipped', created_at: Date.today, updated_at: Date.today)
+    @invoice_3 = Invoice.create!(customer_id: @customer.id, merchant_id: @merchant.id, status: 'shipped', created_at: Date.today, updated_at: Date.today)
+    @transaction_1 = FactoryBot.create(:transaction, invoice_id: @invoice_1.id)
+    @transaction_2 = FactoryBot.create(:transaction, invoice_id: @invoice_1.id)
+    @transaction_3 = FactoryBot.create(:transaction, invoice_id: @invoice_1.id)
+    10.times { FactoryBot.create(:invoice_item, item_id: @item_1.id, invoice_id: @invoice_1.id, unit_price: @item_1.unit_price) }
+    5.times { FactoryBot.create(:invoice_item, item_id: @item_3.id, invoice_id: @invoice_1.id, unit_price: @item_3.unit_price) }
   end
 
-  it 'sends a list of merchants' do
+  it 'can get a list of invoices' do
     get '/api/v1/invoices'
 
     expect(response).to be_successful
@@ -47,12 +55,12 @@ describe 'InvoiceSerializer API' do
   end
 
   it "can find a invoice with query created_at parameters" do
-    get "/api/v1/invoices/find?created_at=#{@invoice_3.created_at}"
+    get "/api/v1/invoices/find?created_at=#{@invoice_2.created_at}"
 
     invoice = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(invoice["data"]["id"]).to eq(@invoice_3.id.to_s)
+    expect(invoice["data"]["id"]).to eq(@invoice_2.id.to_s)
   end
 
   it "can find a invoice with query updated_at parameters" do
@@ -89,7 +97,7 @@ describe 'InvoiceSerializer API' do
     invoice = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(invoice["data"].first["attributes"]["id"]).to eq(@invoice_1.id)
+    expect(invoice["data"].first["attributes"]["id"]).to eq(@invoice_2.id)
     expect(invoice["data"].last["attributes"]["id"]).to eq(@invoice_3.id)
   end
 
@@ -100,9 +108,9 @@ describe 'InvoiceSerializer API' do
 
     expect(response).to be_successful
 
-    expect(transactions["data"].first["attributes"]["id"]).to eq(transaction_1.id)
-    expect(transactions["data"].second["attributes"]["id"]).to eq(transaction_2.id)
-    expect(transactions["data"].last["attributes"]["id"]).to eq(transaction_3.id)
+    expect(transactions["data"].first["attributes"]["id"]).to eq(@transaction_1.id)
+    expect(transactions["data"].second["attributes"]["id"]).to eq(@transaction_2.id)
+    expect(transactions["data"].last["attributes"]["id"]).to eq(@transaction_3.id)
   end
 
   it "can return all invoice_items associated with an invoice" do
@@ -112,8 +120,7 @@ describe 'InvoiceSerializer API' do
 
     expect(response).to be_successful
 
-    expect(invoice_items["data"].first["attributes"]["id"]).to eq(invoice_item_1.id)
-    expect(invoice_items["data"].last["attributes"]["id"]).to eq(invoice_item_3.id)
+    expect(invoice_items["data"].count).to eq(15)
   end
 
   it "can return all items associated with an invoice" do
@@ -123,8 +130,8 @@ describe 'InvoiceSerializer API' do
 
     expect(response).to be_successful
 
-    expect(items["data"].first["attributes"]["id"]).to eq(item_1.id)
-    expect(items["data"].last["attributes"]["id"]).to eq(item_3.id)
+    expect(items["data"].first["attributes"]["id"]).to eq(@item_1.id)
+    expect(items["data"].last["attributes"]["id"]).to eq(@item_3.id)
   end
 
 end
