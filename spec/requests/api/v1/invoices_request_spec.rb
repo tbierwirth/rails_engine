@@ -81,6 +81,15 @@ describe 'Invoices API Endpoints' do
     expect(invoice["data"].first["id"]).to eq(@invoice_1.id.to_s)
   end
 
+  it "can find all invoices by customer_id" do
+    get "/api/v1/invoices/find_all?customer_id=#{@customer.id}"
+
+    invoices = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(invoices["data"].count).to eq(3)
+  end
+
   it "can find all invoices by status" do
     get "/api/v1/invoices/find_all?status=shipped"
 
@@ -132,6 +141,15 @@ describe 'Invoices API Endpoints' do
 
     expect(items["data"].first["attributes"]["id"]).to eq(@item_1.id)
     expect(items["data"].last["attributes"]["id"]).to eq(@item_3.id)
+  end
+
+  it "can return the associated merchant" do
+    get "/api/v1/invoices/#{@invoice_1.id}/merchant"
+
+    merchant = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(merchant["data"]["attributes"]["id"]).to eq(@merchant.id)
   end
 
 end
