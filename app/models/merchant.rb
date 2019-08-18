@@ -4,6 +4,10 @@ class Merchant < ApplicationRecord
   has_many :invoice_items, through: :items
   validates_presence_of :name
 
+  def self.random
+    Merchant.order("RANDOM()").limit(1)
+  end
+
   def self.most_revenue(amount)
     Merchant.joins(invoices: [:invoice_items, :transactions])
             .select('merchants.*, SUM(invoice_items.quantity * invoice_items.unit_price) AS revenue')
