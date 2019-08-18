@@ -1,7 +1,7 @@
 class Api::V1::Invoices::FindController < ApplicationController
 
   def index
-    render json: InvoiceSerializer.new(Invoice.where(find_params))
+    render json: InvoiceSerializer.new(Invoice.where(find_params).order(id: :asc))
   end
 
   def show
@@ -11,7 +11,7 @@ class Api::V1::Invoices::FindController < ApplicationController
   private
 
   def find_params
-    params.permit(:id, :name, :status, :merchant_id, :customer_id)
+    params.permit(:id, :status, :merchant_id, :customer_id, :created_at, :updated_at)
   end
 
 end
