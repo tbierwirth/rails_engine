@@ -43,7 +43,7 @@ describe 'Invoice Items API Endpoints' do
     invoice_items = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(invoice_items["data"].count).to eq(1)
+    expect(InvoiceItem.where(id: invoice_items["data"]["id"].to_i)).to exist
   end
 
   it "can find a invoice item with query item_id parameters" do
