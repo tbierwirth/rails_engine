@@ -11,8 +11,8 @@ describe 'Transactions API Endpoints' do
     @invoice_2 = Invoice.create!(customer_id: @customer.id, merchant_id: @merchant.id, status: 'shipped', created_at: Date.today, updated_at: Date.today)
     @invoice_3 = Invoice.create!(customer_id: @customer.id, merchant_id: @merchant.id, status: 'shipped', created_at: Date.today, updated_at: Date.today)
     @transaction_1 = FactoryBot.create(:transaction, invoice_id: @invoice_1.id)
-    @transaction_2 = FactoryBot.create(:transaction, invoice_id: @invoice_1.id, credit_card_number: @transaction_1.credit_card_number, created_at: Date.today, updated_at: Date.today)
-    @transaction_3 = FactoryBot.create(:transaction, invoice_id: @invoice_1.id, result: 'failed', created_at: Date.today, updated_at: Date.today)
+    @transaction_2 = FactoryBot.create(:transaction, invoice_id: @invoice_2.id)
+    @transaction_3 = FactoryBot.create(:transaction, invoice_id: @invoice_3.id, result: 'failed', created_at: Date.today, updated_at: Date.today)
     @invoice_item = FactoryBot.create(:invoice_item, item_id: @item_3.id, invoice_id: @invoice_1.id, unit_price: @item_3.unit_price, created_at: Date.today.last_week, updated_at: Date.today.last_week)
     10.times { FactoryBot.create(:invoice_item, item_id: @item_1.id, invoice_id: @invoice_2.id, unit_price: @item_1.unit_price, created_at: Date.today, updated_at: Date.today) }
     5.times { FactoryBot.create(:invoice_item, item_id: @item_1.id, invoice_id: @invoice_2.id, unit_price: @item_1.unit_price, created_at: Date.today, updated_at: Date.today) }
@@ -79,7 +79,7 @@ describe 'Transactions API Endpoints' do
     transaction = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(transaction["data"]["id"]).to eq(@transaction_1.id.to_s)
+    expect(transaction["data"]["id"]).to eq(@transaction_3.id.to_s)
   end
 
   it "can find a transaction with query updated_at parameters" do
@@ -88,7 +88,7 @@ describe 'Transactions API Endpoints' do
     transaction = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(transaction["data"]["id"]).to eq(@transaction_1.id.to_s)
+    expect(transaction["data"]["id"]).to eq(@transaction_3.id.to_s)
   end
 
   it "can find all transactions by id" do
@@ -101,23 +101,22 @@ describe 'Transactions API Endpoints' do
   end
 
   it "can find all transactions by credit_card_number" do
-    get "/api/v1/transactions/find_all?id=#{@transaction_1.credit_card_number}"
+    get "/api/v1/transactions/find_all?credit_card_number=#{@transaction_1.credit_card_number}"
 
     transactions = JSON.parse(response.body)
 
     expect(response).to be_successful
+
     expect(transactions["data"].first["id"]).to eq(@transaction_1.id.to_s)
-    expect(transactions["data"].last["id"]).to eq(@transaction_2.id.to_s)
   end
 
   it "can find all transactions by result" do
-    get "/api/v1/transactions/find_all?id=success"
+    get "/api/v1/transactions/find_all?result=failed"
 
     transactions = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(transactions["data"].first["id"]).to eq(@transaction_1.id.to_s)
-    expect(transactions["data"].last["id"]).to eq(@transaction_2.id.to_s)
+    expect(transactions["data"].first["id"]).to eq(@transaction_3.id.to_s)
   end
 
   it "can find all transactions by created_at" do
@@ -126,9 +125,8 @@ describe 'Transactions API Endpoints' do
     transactions = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(transactions["data"].count).to eq(2)
-    expect(transactions["data"].first["id"]).to eq(@transaction_2.id.to_s)
-    expect(transactions["data"].last["id"]).to eq(@transaction_3.id.to_s)
+    expect(transactions["data"].count).to eq(1)
+    expect(transactions["data"].first["id"]).to eq(@transaction_3.id.to_s)
   end
 
   it "can return the associated invoice" do
