@@ -44,21 +44,21 @@ describe 'Invoices API Endpoints' do
   end
 
   it "can find a item with query created_at parameters" do
-    get "/api/v1/items/find?created_at=#{@item_1.created_at}"
+    get "/api/v1/items/find?created_at=#{Date.today}"
 
     item = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(item["data"]["id"]).to eq(@item_1.id.to_s)
+    expect(item["data"]["id"]).to eq(@item_2.id.to_s)
   end
 
   it "can find a item with query updated_at parameters" do
-    get "/api/v1/items/find?updated_at=#{@item_1.updated_at}"
+    get "/api/v1/items/find?updated_at=#{Date.today}"
 
     item = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(item["data"]["id"]).to eq(@item_1.id.to_s)
+    expect(item["data"]["id"]).to eq(@item_2.id.to_s)
   end
 
   it "can find all items by id" do
@@ -68,6 +68,16 @@ describe 'Invoices API Endpoints' do
 
     expect(response).to be_successful
     expect(item["data"].first["id"]).to eq(@item_1.id.to_s)
+  end
+
+  it "can find all items with query merchant_id parameters" do
+    get "/api/v1/items/find_all?merchant_id=#{@merchant.id}"
+
+    items = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(items["data"].first["attributes"]["id"]).to eq(@item_1.id)
+    expect(items["data"].last["attributes"]["id"]).to eq(@item_3.id)
   end
 
   it "can find all items by description" do
@@ -111,11 +121,11 @@ describe 'Invoices API Endpoints' do
   it "can return all associated invoice_items" do
     get "/api/v1/items/#{@item_1.id}/invoice_items"
 
-    invoice_item = JSON.parse(response.body)
+    invoice_items = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(items["data"].count).to eq(11)
-    expect(item["data"].first["attributes"]["id"]).to eq(@invoice_item_1.id)
+    expect(invoice_items["data"].count).to eq(11)
+    expect(invoice_items["data"].first["attributes"]["id"]).to eq(@invoice_item_1.id)
   end
 
 end
