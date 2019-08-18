@@ -37,6 +37,15 @@ describe 'Invoice Items API Endpoints' do
     expect(invoice_items["data"]["id"].to_i).to eq(@invoice_item.id)
   end
 
+  it "can get one random invoice item" do
+    get "/api/v1/invoice_items/random"
+
+    invoice_items = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(invoice_items["data"].count).to eq(1)
+  end
+
   it "can find a invoice item with query item_id parameters" do
     get "/api/v1/invoice_items/find?item_id=#{@item_3.id}"
 
