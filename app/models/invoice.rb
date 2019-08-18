@@ -15,4 +15,13 @@ class Invoice < ApplicationRecord
     .order('revenue DESC')
     .limit(limit)
   end
+
+  def find_transactions
+    Transaction.where('transactions.invoice_id = ?', self).order('transactions.id')
+  end
+
+  def find_invoice_items
+    InvoiceItem.where('invoice_items.invoice_id = ?', self).order('invoice_items.id')
+  end
+
 end
