@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'Invoices API Endpoints' do
+describe 'Items API Endpoints' do
   before :each do
     @customer = Customer.create!(first_name: "Bill", last_name: "Gates")
     @merchant = Merchant.create!(name: "Bob's Burgers", created_at: Date.today.last_week, updated_at: Date.today.last_week)
