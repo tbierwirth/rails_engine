@@ -7,10 +7,6 @@ class Invoice < ApplicationRecord
   has_many :transactions
   has_many :items, through: :invoice_items
 
-  def self.random
-    Invoice.order("RANDOM()").limit(1)
-  end
-
   def self.most_revenue(limit = 5)
     select('invoices.*, SUM(invoice_items.quantity * invoice_items.unit_price) AS revenue')
     .joins(:invoice_items, :transactions)
