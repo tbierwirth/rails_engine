@@ -16,58 +16,14 @@
   - Example: `rake import:merchants`
 
 ## Merchant Endpoints
-#### List of Merchants
+#### List of Invoices
 HTTP Request: `GET /api/v1/merchants`
 
-Example JSON output:
-```
-{
-  "data": [
-  {
-    "id": "1",
-      "type": "merchant",
-      "attributes": {
-        "id": 1
-        "name": "Schroeder-Jerde",
-      }
-  },
-  {
-    "id": "2",
-    "type": "merchant",
-    "attributes": {
-      "id": 2
-      "name": "Klein, Rempel and Jones",
-    }
-  },
-  {
-    "id": "3",
-    "type": "merchant",
-    "attributes": {
-      "id": 3
-      "name": "Willms and Sons",
-    }
-  }
-  ]
-}
-```
 #### Individual Merchant
 HTTP Request: `GET /api/v1/merchants/{id}`
 
-Example JSON output:
-```
-{
-  "data": {
-    "id": "1",
-    "type": "merchant",
-    "attributes": {
-      "id": 1
-      "name": "Schroeder-Jerde",
-    }
-  }
-}
-```
 #### Find Single Merchant
-HTTP Request: `GET /api/v1/merchants/find?parameters`
+HTTP Request: `GET /api/v1/merchants/find?{parameters}`
 
 | Parameter  | Description                                |
 |------------|--------------------------------------------|
@@ -76,23 +32,9 @@ HTTP Request: `GET /api/v1/merchants/find?parameters`
 | created_at | search based on the time created at        |
 | updated_at | search based on the time updated at        |
 
-Example JSON output:
 
-`GET /api/v1/merchants/find?name=Schroeder-Jerde`
-```
-{
-  "data": {
-    "id": "1",
-    "type": "merchant",
-    "attributes": {
-      "name": "Schroeder-Jerde"
-    }
-  }
-}
-```
-
-#### Find All Merchants
-HTTP Request: `GET /api/v1/merchants/find_all?parameters`
+#### Find All Invoices
+HTTP Request: `GET /api/v1/merchants/find_all?{parameters}`
 
 | Parameter  | Description                                |
 |------------|--------------------------------------------|
@@ -101,20 +43,83 @@ HTTP Request: `GET /api/v1/merchants/find_all?parameters`
 | created_at | search based on the time created at        |
 | updated_at | search based on the time updated at        |
 
-Example JSON output:
+#### Return Merchant Items
+HTTP Request: `GET /api/v1/merchants/{merchant id}/items`
 
-`GET /api/v1/merchants/find_all?name=Cummings-Thiel`
-```
-{
-  "data":
-  [
-  {
-    "id": "4",
-    "type": "merchant",
-    "attributes": {
-      "name": "Cummings-Thiel"
-    }
-  }
-  ]
-}
-```
+#### Return Merchant invoices
+HTTP Request: `GET /api/v1/merchants/{merchant id}/invoices`
+
+### Merchant Business Logic
+
+#### Return Top Invoices by Total Revenue
+HTTP Request: `GET /api/v1/merchants/most_revenue?quantity={number of merchants}`
+
+#### Return Top Invoices by Most Items Sold
+HTTP Request: `GET /api/v1/merchants/most_items?quantity={number of merchants}`
+
+#### Return Total Revenue by Date
+HTTP Request: `GET /api/v1/merchants/revenue?date={date}`
+
+Date Format: `2012-03-23`
+
+#### Return Total Revenue for Merchant
+HTTP Request: `GET /api/v1/merchants/{merchant id}/revenue`
+
+#### Return Total Revenue for Merchant by Date
+HTTP Request: `GET /api/v1/merchants/{merchant id}/revenue?date={date}`
+
+Date Format: `2012-03-23`
+
+#### Return Merchant's Favorite Customer
+HTTP Request: `GET /api/v1/merchants/{merchant id}/favorite_customer`
+
+## Invoice Endpoints
+#### List of Invoices
+HTTP Request: `GET /api/v1/invoices`
+
+#### Individual Invoice
+HTTP Request: `GET /api/v1/invoices/{id}`
+
+#### Find Single Invoice
+HTTP Request: `GET /api/v1/invoices/find?{parameters}`
+
+| Parameter  | Description                                |
+|------------|--------------------------------------------|
+| id         | search based on the invoice's primary key |
+| customer_id       | search based on the invoice's customer        |
+| merchant_id       | search based on the invoice's merchant        |
+| status       | search based on the invoice's status        |
+| created_at | search based on the time created at        |
+| updated_at | search based on the time updated at        |
+
+
+#### Find All Invoices
+HTTP Request: `GET /api/v1/invoices/find_all?{parameters}`
+
+| Parameter  | Description                                |
+|------------|--------------------------------------------|
+| id         | search based on the invoice's primary key |
+| customer_id       | search based on the invoice's customer        |
+| merchant_id       | search based on the invoice's merchant        |
+| status       | search based on the invoice's status        |
+| created_at | search based on the time created at        |
+| updated_at | search based on the time updated at        |
+
+#### Return Invoice's Transactions
+HTTP Request: `GET /api/v1/invoices/{invoice id}/transactions`
+
+#### Return Invoice's Invoice_Items
+HTTP Request: `GET /api/v1/invoices/{invoice id}/invoice_items`
+
+### Merchant Business Logic
+
+#### Return Top Invoices by Total Revenue
+HTTP Request: `GET /api/v1/invoices/most_revenue?quantity={number of invoices}`
+
+#### Return Top Invoices by Most Items Sold
+HTTP Request: `GET /api/v1/invoices/most_items?quantity={number of invoices}`
+
+#### Return Total Revenue by Date
+HTTP Request: `GET /api/v1/invoices/revenue?date={date}`
+
+Date Format: `2012-03-23`
