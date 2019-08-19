@@ -110,16 +110,3 @@ HTTP Request: `GET /api/v1/invoices/{invoice id}/transactions`
 
 #### Return Invoice's Invoice_Items
 HTTP Request: `GET /api/v1/invoices/{invoice id}/invoice_items`
-
-### Merchant Business Logic
-
-#### Return Top Invoices by Total Revenue
-HTTP Request: `GET /api/v1/invoices/most_revenue?quantity={number of invoices}`
-
-#### Return Top Invoices by Most Items Sold
-HTTP Request: `GET /api/v1/invoices/most_items?quantity={number of invoices}`
-
-#### Return Total Revenue by Date
-HTTP Request: `GET /api/v1/invoices/revenue?date={date}`
-
-Date Format: `2012-03-23`
